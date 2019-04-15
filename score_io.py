@@ -6,6 +6,7 @@ import pandas as pd
 
 
 def read_data(responses_file: str) -> pd.DataFrame:
+    # reads in raw responses
     data_df: pd.DataFrame = pd.read_csv(responses_file).drop(columns=["Timestamp"])
 
     # change column names to something more managable
@@ -42,6 +43,9 @@ def read_data(responses_file: str) -> pd.DataFrame:
 
 
 def split_hybrid_question(df: pd.DataFrame) -> pd.DataFrame:
+    # helper function for reading in the data to split question 27 into separate questions
+    # for ease of scoring
+
     df_hold = df[df.question != "27. Which TWO supporting characters kill which TWO supporting characters?"]
     df_support = df[df.question == "27. Which TWO supporting characters kill which TWO supporting characters?"] \
         .assign(answer1=lambda x: x.answer.str.split(".").str[0].str.strip(),
@@ -58,6 +62,7 @@ def split_hybrid_question(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_answer_csv(df: pd.DataFrame, write_file: bool = False):
+    # creates answer sheet from form
     df.groupby("team")["points"].sum()
 
     answer_early_df: pd.DataFrame = df[["question", "points"]].drop_duplicates()
