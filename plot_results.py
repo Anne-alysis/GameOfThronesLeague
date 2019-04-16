@@ -14,12 +14,28 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 
 def remove_punctuations(text):
+    """
+    Remove punctutation from free-form answers
+    
+    :param text: free form answer
+    :return: cleaned answered
+    """
+
     for punctuation in string.punctuation:
         text = text.replace(punctuation, '')
     return text
 
 
 def plot_function(df: pd.DataFrame, question: str, pdf):
+    """
+    Function to plot the split of a single question in a pie chart.
+
+    :param df: aggregate df
+    :param question: question to use to filter aggregate data
+    :param pdf: place to save data
+    :return: None
+    """
+
     plt.clf()
     df_plot = df[df.question == question]
 
@@ -49,6 +65,14 @@ def plot_function(df: pd.DataFrame, question: str, pdf):
 
 
 def reshape_data_for_plots(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Data needs to be aggregated by unique response to calculate the percentage
+    of people who choose each response.  Some questions are free form and need
+    to have their responses as standardized as possible...
+    :param df: raw cleaned data frame
+    :return: aggregated data frame, even cleaner!
+    """
+
     df['answer_mod'] = df['answer']
     for i in range(df.shape[0]):
         if "26" in df.loc[i, "question"] or "27" in df.loc[i, "question"]:
@@ -73,6 +97,13 @@ def reshape_data_for_plots(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def generate_plots(df: pd.DataFrame, pdf_results_file: str):
+
+    """
+    This will generate pie plots for the responses.
+    :param df: raw cleaned responses
+    :param pdf_results_file: path for output pdf
+    :return: None
+    """
 
     # reshape free form questions
     reshaped_df = reshape_data_for_plots(df)

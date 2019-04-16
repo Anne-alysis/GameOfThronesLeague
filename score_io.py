@@ -110,7 +110,7 @@ def combine_weeks_and_write_scores(df: pd.DataFrame, week: int, results_file: st
     :param results_file: file name
     :return: None
     """
-    
+
     now = datetime.datetime.now()
     today_date = now.strftime("%Y-%m-%d")
 
