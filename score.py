@@ -50,7 +50,7 @@ def main():
 
     # write answers to csv, for forming correct answer sheet
     if create_answer_flag:
-        sio.create_answer_csv(response_df, True)
+        sio.create_answer_csv(response_df)
 
     # read in correct answer key
     answer_df: pd.DataFrame = pd.read_excel(answer_file)
