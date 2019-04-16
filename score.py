@@ -1,3 +1,17 @@
+"""
+
+In honor of the final season of Game of Thrones, we put together a fantasy league! Each participant fills out a
+form we developed, and the code to algorithmically score the results is in this repo. Example questions include:
+
+- Whether a character lives or dies
+- Who rides a dragon
+- Who ends up on the Iron Throne (if it still exists)
+
+See README.md for more details.
+
+
+"""
+
 import sys
 
 import pandas as pd
@@ -43,7 +57,7 @@ def main():
 
     # score the results against the answer key
     print("Scoring results ...")
-    summed_df: pd.DataFrame = sm.score_results(response_df, answer_df, week, pdf_results_file)
+    summed_df: pd.DataFrame = sm.score_results(response_df, answer_df, week)
 
     print("Writing results ...")
     sio.combine_weeks_and_write_scores(summed_df, week, results_file)
