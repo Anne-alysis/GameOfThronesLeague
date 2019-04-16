@@ -16,7 +16,7 @@ import sys
 
 import pandas as pd
 
-import plot_results as pr
+import score_plotting as sp
 import score_output_handling as so
 import score_input_handling as si
 import score_methods as sm
@@ -47,7 +47,7 @@ def main():
 
     # produce aggregate statistical plots
     if week == 1:
-        pr.generate_plots(response_df, pdf_results_file)
+        sp.generate_plots(response_df, pdf_results_file)
 
     # write answers to csv, for forming correct answer sheet
     if create_answer_flag:
