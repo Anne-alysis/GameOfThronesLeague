@@ -13,7 +13,14 @@ import pandas as pd
 
 
 def read_data(responses_file: str) -> pd.DataFrame:
-    
+    """
+    This reads in the raw responses downloaded from Google forms and returns a reshaped data frame
+
+
+    :param responses_file:  location of the file
+    :return: reshaped dataframe
+    """
+
     # reads in raw responses
     data_df: pd.DataFrame = pd.read_csv(responses_file).drop(columns=["Timestamp"])
 
@@ -75,19 +82,35 @@ def split_hybrid_question(df: pd.DataFrame) -> pd.DataFrame:
     return df_concat
 
 
-def create_answer_csv(df: pd.DataFrame, write_file: bool = False):
+def create_answer_csv(df: pd.DataFrame):
+    """
+    This writes out the structure of the answers, which is taken directly from the responses of the Google form.
+
+    :param df: this is the cleaned responses data frame
+    :return: None
+    """
+
     # creates answer sheet from form
     df.groupby("team")["points"].sum()
 
     answer_early_df: pd.DataFrame = df[["question", "points"]].drop_duplicates()
 
-    if write_file:
-        answer_early_df.to_csv("answer_structure.csv", index=False)
+    answer_early_df.to_csv("answer_structure.csv", index=False)
 
-    return
+    return None
 
 
 def combine_weeks_and_write_scores(df: pd.DataFrame, week: int, results_file: str) -> None:
+    """
+    This takes in the scores and writes them to a file.  This will append to previous
+    results if they exist (week > 1).
+
+    :param df: final scores
+    :param week: episode week
+    :param results_file: file name
+    :return: None
+    """
+    
     now = datetime.datetime.now()
     today_date = now.strftime("%Y-%m-%d")
 
