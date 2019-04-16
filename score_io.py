@@ -1,3 +1,10 @@
+"""
+
+This handles the input and output of the project.  This reads in the raw responses, reshapes them,
+creates the structure of the answer sheet, and writes the results to a file.
+
+"""
+
 import datetime
 import os
 
@@ -6,6 +13,7 @@ import pandas as pd
 
 
 def read_data(responses_file: str) -> pd.DataFrame:
+    
     # reads in raw responses
     data_df: pd.DataFrame = pd.read_csv(responses_file).drop(columns=["Timestamp"])
 
@@ -43,8 +51,14 @@ def read_data(responses_file: str) -> pd.DataFrame:
 
 
 def split_hybrid_question(df: pd.DataFrame) -> pd.DataFrame:
-    # helper function for reading in the data to split question 27 into separate questions
-    # for ease of scoring
+    """
+    helper function for reading in the data to split question 27 into separate questions
+    for ease of scoring
+
+    :param df: cleaned responses data frame
+    :return:  data frame that has the hybrid question split into two rows for each response
+
+    """
 
     df_hold = df[df.question != "27. Which TWO supporting characters kill which TWO supporting characters?"]
     df_support = df[df.question == "27. Which TWO supporting characters kill which TWO supporting characters?"] \

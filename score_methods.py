@@ -1,8 +1,15 @@
+"""
+
+This module scores the results and returns the score and rank for a given week.
+
+"""
+
 import pandas as pd
 import string
 
 
 def score_exact(df: pd.DataFrame) -> pd.DataFrame:
+    # score questions with only one correct answer
     filter_df: pd.DataFrame = df[df.include] \
         .assign(correct=lambda x: x.answer == x.answer_truth,
                 score=lambda x: x.correct * x.points)
@@ -11,6 +18,7 @@ def score_exact(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def score_multiple(df: pd.DataFrame) -> pd.DataFrame:
+    # score questions with multiple correct answers
     filter_df: pd.DataFrame = df[df.include] \
         .assign(correct=False)
 
@@ -33,7 +41,24 @@ def score_multiple(df: pd.DataFrame) -> pd.DataFrame:
     return filter_df
 
 
-def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int, pdf_results_file: str) -> pd.DataFrame:
+def aggregate_results(df: pd.DataFrame, week: int) -> pd.DataFrame:
+    summed_df: pd.DataFrame = df \
+        .groupby(["team", "pay_type"])["score"] \
+        .sum().to_frame() \
+        .sort_values("score", ascending=False) \
+        .reset_index() \
+        .assign(rank=lambda x: x.score.rank(ascending=False, method="max"))[['team', 'pay_type', 'rank', 'score']]
+
+    summed_df.rename(columns={'score': f'Episode {week} Score',
+                              'rank': f'Episode {week} Rank',
+                              'team': 'Team',
+                              'pay_type': 'Iron Bank'},
+                     inplace=True)
+
+    return summed_df
+
+
+def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int) -> pd.DataFrame:
     merged_df: pd.DataFrame = pd.merge(response_df, answer_df.drop(columns="points"), "left", "question")
 
     # convert to boolean
@@ -55,17 +80,6 @@ def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int,
     combined_df.to_csv("./archive/Results_unaggregated.csv")
 
     # aggregate raw scores
-    summed_df: pd.DataFrame = combined_df \
-        .groupby(["team", "pay_type"])["score"] \
-        .sum().to_frame() \
-        .sort_values("score", ascending=False) \
-        .reset_index() \
-        .assign(rank=lambda x: x.score.rank(ascending=False, method="max"))[['team', 'pay_type', 'rank', 'score']]
-
-    summed_df.rename(columns={'score': f'Episode {week} Score',
-                              'rank': f'Episode {week} Rank',
-                              'team': 'Team',
-                              'pay_type': 'Iron Bank'},
-                     inplace=True)
+    summed_df = aggregate_results(combined_df, week)
 
     return summed_df
