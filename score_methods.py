@@ -9,6 +9,14 @@ import string
 
 
 def score_exact(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Score questions that should be matched exactly.
+
+    :param df: previously filtered df only exact match questions
+    :return: df with score
+
+    """
+
     # score questions with only one correct answer
     filter_df: pd.DataFrame = df[df.include] \
         .assign(correct=lambda x: x.answer == x.answer_truth,
@@ -18,7 +26,15 @@ def score_exact(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def score_multiple(df: pd.DataFrame) -> pd.DataFrame:
-    # score questions with multiple correct answers
+    """
+    Score questions that are not matched exactly (multiple correct answers possible).
+    A string with a comma separated list of correct answers is what is being
+    compared to.
+
+    :param df: previously filtered df for non-exact match questions
+    :return: df with score
+    """
+
     filter_df: pd.DataFrame = df[df.include] \
         .assign(correct=False)
 
@@ -42,6 +58,14 @@ def score_multiple(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def aggregate_results(df: pd.DataFrame, week: int) -> pd.DataFrame:
+    """
+    Takes in the scored data frame and groups by team, etc, and ranks each player
+
+    :param df: scored df
+    :param week: episode number
+    :return: final rankings and scores
+    """
+
     summed_df: pd.DataFrame = df \
         .groupby(["team", "pay_type"])["score"] \
         .sum().to_frame() \
@@ -59,6 +83,15 @@ def aggregate_results(df: pd.DataFrame, week: int) -> pd.DataFrame:
 
 
 def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int) -> pd.DataFrame:
+    """
+    This reads in the cleaned responses and scores them.
+
+    :param response_df: cleaned responses df
+    :param answer_df: source of truth for correct answers
+    :param week: episode number
+    :return: teams with scores and ranks for the given week
+    """
+
     merged_df: pd.DataFrame = pd.merge(response_df, answer_df.drop(columns="points"), "left", "question")
 
     # convert to boolean
