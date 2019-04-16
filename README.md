@@ -3,12 +3,15 @@
 # Introduction
 
 In honor of the final season of Game of Thrones, we put together a fantasy league!  Each participant fills
-out a form we developed, and the code to algorithmically score the results is in this repo.  Example questions
+out a form we developed before the start of the season. Week by week, possible answers to each question are updated, and the code to algorithmically score the results each week is in this repo.  Example questions
 include:
  
  * Whether a character lives or dies
  * Who rides a dragon
  * Who ends up on the Iron Throne (if it still exists)
+
+At the end of the season, the top ranked team wins a prize and the Iron Throne. 
+
 
 # General Code Structure
 
