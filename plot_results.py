@@ -16,7 +16,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 def remove_punctuations(text):
     """
     Remove punctutation from free-form answers
-    
+
     :param text: free form answer
     :return: cleaned answered
     """
