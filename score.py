@@ -23,13 +23,12 @@ create_answer_flag = False
 
 
 def main():
-
     # set file names for in and out
     dirpath = "./external-files"
     responses_file = f"{dirpath}/Fantasy Game of Thrones Responses.csv"
-    answer_file =  f"{dirpath}/answer_truth.xlsx"
-    results_file =  f"{dirpath}/Results.csv"
-    pdf_results_file =  f"{dirpath}/Results.pdf"
+    answer_file = f"{dirpath}/answer_truth.xlsx"
+    results_file = f"{dirpath}/Results.csv"
+    pdf_results_file = f"{dirpath}/Results.pdf"
 
     print("This is the name of the script: ", sys.argv[0])
     print("Number of arguments: ", len(sys.argv))
@@ -39,7 +38,6 @@ def main():
 
     print(f"This is episode: {week}")
 
-    # read in responses
     print("Reading in responses ...")
     response_df: pd.DataFrame = si.read_data(responses_file)
 
@@ -54,8 +52,7 @@ def main():
     # read in correct answer key
     answer_df: pd.DataFrame = pd.read_excel(answer_file)
 
-    # score the results against the answer key
-    print("Scoring results ...")
+    print("Scoring results against correct answers ...")
     summed_df: pd.DataFrame = sm.score_results(response_df, answer_df, week)
 
     print("Combining previous weeks' results ... (if applicable)")

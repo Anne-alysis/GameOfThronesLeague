@@ -36,11 +36,13 @@ def combine_weeks(df: pd.DataFrame, week: int, results_file: str) -> pd.DataFram
         if mvmt_name in old_results.columns:
             old_results.drop(columns=mvmt_name, inplace=True)
 
+        # combine old results with current results
         combined_results = pd.merge(df, old_results, "left", \
                                     ["Team", "Iron Bank"]).sort_values(f"Episode {week} Rank")
         combined_results[mvmt_name] = combined_results[f"Episode {week} Rank"] - \
                                       combined_results[f"Episode {week - 1} Rank"]
 
+        # change the position of the "movement" column
         col_names = list(combined_results.columns)
         rearranged_names = col_names[:3] + col_names[-1:] + col_names[3:(len(col_names) - 1)]
 

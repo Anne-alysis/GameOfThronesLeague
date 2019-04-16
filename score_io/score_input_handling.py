@@ -13,7 +13,6 @@ def read_data(responses_file: str) -> pd.DataFrame:
     """
     This reads in the raw responses downloaded from Google forms and returns a reshaped data frame
 
-
     :param responses_file:  location of the file
     :return: reshaped dataframe
     """
@@ -24,7 +23,7 @@ def read_data(responses_file: str) -> pd.DataFrame:
     # change column names to something more managable
     col_names = data_df.columns
 
-    # append numbers to questions
+    # append numbers to questions, with "zero" padding for i < 10
     enumerated_col_names = ['{:02d}'.format(i) + ". " + j for i, j in enumerate(col_names[4:], 1)]
 
     # rename columns
@@ -52,22 +51,26 @@ def read_data(responses_file: str) -> pd.DataFrame:
     columns = grouping_names + ["question", "points", "answer"]
 
     # split write-in question that has two potential answers into two questions (i.e., 1 row -> 2 rows)
-    almost_final_df = split_hybrid_question(data_melt_munged_df[columns])
+    final_df = split_hybrid_question(data_melt_munged_df[columns])
 
-    return almost_final_df
+    return final_df
 
 
 def split_hybrid_question(df: pd.DataFrame) -> pd.DataFrame:
     """
-    helper function for reading in the data to split question 27 into separate questions
-    for ease of scoring
+    Helper function for reading in the data to split question 27 into separate questions
+    for ease of scoring.  This question has two write-in answers, and this splits into
+    2 rows from 1 row.
 
     :param df: cleaned responses data frame
     :return:  data frame that has the hybrid question split into two rows for each response
 
     """
 
+    # keep questions that don't need alteration
     df_hold = df[df.question != "27. Which TWO supporting characters kill which TWO supporting characters?"]
+
+    # filter out question that needs attention
     df_support = df[df.question == "27. Which TWO supporting characters kill which TWO supporting characters?"] \
         .assign(answer1=lambda x: x.answer.str.split(".").str[0].str.strip(),
                 answer2=lambda x: x.answer.str.split(".").str[1].str.strip()) \
@@ -75,6 +78,7 @@ def split_hybrid_question(df: pd.DataFrame) -> pd.DataFrame:
 
     col_names = ["team", "pay_type", "question", "points"]
 
+    # recombine data
     df_concat = pd.concat([df_hold[col_names + ["answer"]],
                            df_support[col_names + ["answer1"]].rename(columns={'answer1': 'answer'}),
                            df_support[col_names + ["answer2"]].rename(columns={'answer2': 'answer'})],

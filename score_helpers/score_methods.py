@@ -1,6 +1,7 @@
 """
 
-This module scores the results and returns the score and rank for a given week.
+This module scores the results and returns the score and rank for a given week for
+any questions for which a correct answer can be rendered ("include").
 
 """
 
@@ -18,9 +19,10 @@ def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int)
     :return: teams with scores and ranks for the given week
     """
 
+    # join responses to correct answers
     merged_df: pd.DataFrame = pd.merge(response_df, answer_df.drop(columns="points"), "left", "question")
 
-    # convert to boolean
+    # convert some columns to boolean
     cols_to_bool = ["multiple_answers"]
     for i in ["include", cols_to_bool]:
         merged_df[i] = merged_df[i].astype(bool)
@@ -53,7 +55,6 @@ def score_exact(df: pd.DataFrame) -> pd.DataFrame:
 
     """
 
-    # score questions with only one correct answer
     filter_df: pd.DataFrame = df[df.include] \
         .assign(correct=lambda x: x.answer == x.answer_truth,
                 score=lambda x: x.correct * x.points)
@@ -95,7 +96,8 @@ def score_multiple(df: pd.DataFrame) -> pd.DataFrame:
 
 def aggregate_results(df: pd.DataFrame, week: int) -> pd.DataFrame:
     """
-    Takes in the scored data frame and groups by team, etc, and ranks each player
+    Takes in the scored data frame and groups by team, etc, ranks each player,
+    and renames columns for better aesthetics when shared to participants in a Google doc.
 
     :param df: scored df
     :param week: episode number

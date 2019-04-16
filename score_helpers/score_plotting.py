@@ -44,11 +44,11 @@ def plot_function(df: pd.DataFrame, question: str, pdf):
     """
 
     plt.clf()
+    # filter data for a single question per plot
     df_plot = df[df.question == question]
 
     fig1, ax1 = plt.subplots()
     ax1.pie(df_plot.perc,
-            # explode=df_plot.explode,
             labels=df_plot.answer_mod,
             autopct='%1.1f%%',
             shadow=True,
@@ -73,6 +73,7 @@ def reshape_data_for_plots(df: pd.DataFrame) -> pd.DataFrame:
     :return: aggregated data frame, even cleaner!
     """
 
+    # lower strings and remove punctuation for write-in questions
     df['answer_mod'] = df['answer']
     for i in range(df.shape[0]):
         if "26" in df.loc[i, "question"] or "27" in df.loc[i, "question"]:
@@ -88,10 +89,7 @@ def reshape_data_for_plots(df: pd.DataFrame) -> pd.DataFrame:
 
     # join so can calculate percentages of unique answers
     agg_combined_df = pd.merge(agg_df, agg_total_df, "left", "question") \
-        .assign(perc=lambda x: x.counts / x.total * 100.0
-                # correct=lambda x: x.answer == x.answer_truth
-                )
-    # agg_combined_df["explode"] = np.where(agg_combined_df.correct, 0.1, 0.0)
+        .assign(perc=lambda x: x.counts / x.total * 100.0)
 
     return agg_combined_df
 
@@ -107,6 +105,7 @@ def munge_title(question: str):
     n = len(question)
     font_size = 16 if n < 20 else 13
 
+    # for long question titles, split up with newline "\n"
     if n > 35:
         middle = math.floor(n / 2)
         while question[middle] != " " and middle < (n - 1):
@@ -120,7 +119,7 @@ def munge_title(question: str):
 
 def remove_punctuations(text):
     """
-    Remove punctutation from free-form answers
+    Remove punctutation from write-in answers
 
     :param text: free form answer
     :return: cleaned answered
