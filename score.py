@@ -16,10 +16,8 @@ import sys
 
 import pandas as pd
 
-import score_plotting as sp
-import score_output_handling as so
-import score_input_handling as si
-import score_methods as sm
+from score_helpers import score_plotting as sp, score_methods as sm
+from score_io import score_input_handling as si, score_output_handling as so
 
 create_answer_flag = False
 
