@@ -36,27 +36,29 @@ Each week an argument is read in to indicate the value of the week (e.g., 1 - 6)
 
 This is the main module which includes all steps outlined above.  
 
-## `score_input_handling.py`
+## `score_io` package
+### `score_input_handling.py`
 
 This module handles all the input operations, such as:
  * Reading in responses and reshaping that data
  * Creating the structure of the answer sheet
  
- 
-## `score_methods.py`
-This module includes the methods for scoring.  Most are exact match algorithms, but
-some questions have multiple possible answers.  These are handled separately.  Grouping the final
-results by team also happen in this module.  
-
-## `score_plotting.py`
-
-This takes in each question, aggregates the distinct responses, and plots each question to a pdf.  All 
-individual plots are combined into a single pdf.
-
-## `score_output_handling.py`
+ ### `score_output_handling.py`
 
 This module handles all the output operations, such as:
 * Combining previous weeks' results (if `week > 1`)
  * Writing out the results
  
+ ## `score_helpers` package
+### `score_methods.py`
+This module includes the methods for scoring.  Most are exact match algorithms, but
+some questions have multiple possible answers.  These are handled separately.  Grouping the final
+results by team also happen in this module.  
+
+### `score_plotting.py`
+
+This takes in each question, aggregates the distinct responses, and plots each question to a pdf.  All 
+individual plots are combined into a single pdf.
+
+
 
