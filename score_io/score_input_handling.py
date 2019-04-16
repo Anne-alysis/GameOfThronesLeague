@@ -30,6 +30,7 @@ def read_data(responses_file: str) -> pd.DataFrame:
     # rename columns
     col_names_new = ['name', 'team', 'pay_type', 'split_type'] + enumerated_col_names
 
+    # prepare to melt wide data set to narrow and long data set
     data_df.columns = col_names_new
     grouping_names = ["team", "pay_type"]
     dropped_names = ['name', 'split_type']
@@ -39,6 +40,7 @@ def read_data(responses_file: str) -> pd.DataFrame:
                                          var_name="question_full",
                                          value_name="answer")
 
+    # add columns: parse point value, create boolean flags, strip questions
     data_melt_munged_df = data_melt_df.assign(
         question_full=lambda x: x.question_full.str.strip(),
         boolean_question=lambda x: x.question_full.str.contains("\\["),
@@ -49,6 +51,7 @@ def read_data(responses_file: str) -> pd.DataFrame:
 
     columns = grouping_names + ["question", "points", "answer"]
 
+    # split write-in question that has two potential answers into two questions (i.e., 1 row -> 2 rows)
     almost_final_df = split_hybrid_question(data_melt_munged_df[columns])
 
     return almost_final_df
@@ -87,7 +90,7 @@ def create_answer_csv(df: pd.DataFrame):
     :return: None
     """
 
-    # creates answer sheet from form
+    # creates answer sheet from form so questions will match exactly for later joining
     df.groupby("team")["points"].sum()
 
     answer_early_df: pd.DataFrame = df[["question", "points"]].drop_duplicates()
