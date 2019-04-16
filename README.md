@@ -29,7 +29,7 @@ Note, the algorithm was tested with a mock answer sheet as well (`./external-fil
 
 Each week an argument is read in to indicate the value of the week (e.g., 1 - 6). 
 
-`> python score.py week_value`
+`> python score.py ${week_value}`
 
 # Modules
 ## `score.py`
