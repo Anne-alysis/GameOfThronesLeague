@@ -48,7 +48,7 @@ This module includes the methods for scoring.  Most are exact match algorithms, 
 some questions have multiple possible answers.  These are handled separately.  Grouping the final
 results by team also happen in this module.  
 
-## `plot_results.py`
+## `score_plotting.py`
 
 This takes in each question, aggregates the distinct responses, and plots each question to a pdf.  All 
 individual plots are combined into a single pdf.
