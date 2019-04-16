@@ -60,8 +60,8 @@ results by team also happen in this module.
 
 ### `score_plotting.py`
 
-This takes in each question, aggregates the distinct responses, and plots each question to a pdf.  All 
-individual plots are combined into a single pdf.
+This takes in each question, aggregates the distinct responses, and plots the percentage of each unique response in a pie chart.  All 
+individual visualized questions are then combined into a single pdf.
 
 
 
