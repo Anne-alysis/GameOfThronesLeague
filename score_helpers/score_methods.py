@@ -11,7 +11,7 @@ import string
 
 def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int) -> pd.DataFrame:
     """
-    This reads in the cleaned responses and scores them.
+    This reads in the cleaned responses and scores them, if they should be included in scoring "include".
 
     :param response_df: cleaned responses df
     :param answer_df: source of truth for correct answers

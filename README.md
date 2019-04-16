@@ -16,7 +16,7 @@ This code will be run weekly and scores recalculated based on new information in
 week the correct answers will be updated, and responses re-evaluated against changing information (e.g., 
 a character dies).
 
-1) The code reads in the responses from a downloaded CSV (`./external-files/Fantasy Game of Thrones Responses.csv')
+1) The code reads in the responses from a downloaded CSV (`./external-files/Fantasy Game of Thrones Responses.csv`)
 2) Responses are reshaped to allow for ease of scoring
 3) Answers from a Excel sheet are read in (`./external-files/answer_truth.xlsx`)
 4) Aggregate responses are plotted to pdf (if week 1 only, `./external-files/Results.pdf`)
