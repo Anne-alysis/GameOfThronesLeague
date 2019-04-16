@@ -8,6 +8,42 @@ import pandas as pd
 import string
 
 
+def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int) -> pd.DataFrame:
+    """
+    This reads in the cleaned responses and scores them.
+
+    :param response_df: cleaned responses df
+    :param answer_df: source of truth for correct answers
+    :param week: episode number
+    :return: teams with scores and ranks for the given week
+    """
+
+    merged_df: pd.DataFrame = pd.merge(response_df, answer_df.drop(columns="points"), "left", "question")
+
+    # convert to boolean
+    cols_to_bool = ["multiple_answers"]
+    for i in ["include", cols_to_bool]:
+        merged_df[i] = merged_df[i].astype(bool)
+
+    # score exact
+    exact_df = merged_df[~merged_df.multiple_answers].drop(columns=cols_to_bool)
+    exact_scored_df = score_exact(exact_df)
+
+    # score multiple possibilities
+    multiple_df = merged_df[merged_df.multiple_answers].drop(columns=cols_to_bool)
+    multiple_scored_df = score_multiple(multiple_df)
+
+    # combine all scores
+    combined_df = pd.concat([exact_scored_df, multiple_scored_df], ignore_index=True).drop(columns=["include"]) \
+        .sort_values(["question", "team"])
+    combined_df.to_csv("./archive/Results_unaggregated.csv")
+
+    # aggregate raw scores
+    summed_df = aggregate_results(combined_df, week)
+
+    return summed_df
+
+
 def score_exact(df: pd.DataFrame) -> pd.DataFrame:
     """
     Score questions that should be matched exactly.
@@ -78,41 +114,5 @@ def aggregate_results(df: pd.DataFrame, week: int) -> pd.DataFrame:
                               'team': 'Team',
                               'pay_type': 'Iron Bank'},
                      inplace=True)
-
-    return summed_df
-
-
-def score_results(response_df: pd.DataFrame, answer_df: pd.DataFrame, week: int) -> pd.DataFrame:
-    """
-    This reads in the cleaned responses and scores them.
-
-    :param response_df: cleaned responses df
-    :param answer_df: source of truth for correct answers
-    :param week: episode number
-    :return: teams with scores and ranks for the given week
-    """
-
-    merged_df: pd.DataFrame = pd.merge(response_df, answer_df.drop(columns="points"), "left", "question")
-
-    # convert to boolean
-    cols_to_bool = ["multiple_answers"]
-    for i in ["include", cols_to_bool]:
-        merged_df[i] = merged_df[i].astype(bool)
-
-    # score exact
-    exact_df = merged_df[~merged_df.multiple_answers].drop(columns=cols_to_bool)
-    exact_scored_df = score_exact(exact_df)
-
-    # score multiple possibilities
-    multiple_df = merged_df[merged_df.multiple_answers].drop(columns=cols_to_bool)
-    multiple_scored_df = score_multiple(multiple_df)
-
-    # combine all scores
-    combined_df = pd.concat([exact_scored_df, multiple_scored_df], ignore_index=True).drop(columns=["include"]) \
-        .sort_values(["question", "team"])
-    combined_df.to_csv("./archive/Results_unaggregated.csv")
-
-    # aggregate raw scores
-    summed_df = aggregate_results(combined_df, week)
 
     return summed_df

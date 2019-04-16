@@ -13,17 +13,24 @@ import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
 
-def remove_punctuations(text):
+def generate_plots(df: pd.DataFrame, pdf_results_file: str):
     """
-    Remove punctutation from free-form answers
-
-    :param text: free form answer
-    :return: cleaned answered
+    This will generate pie plots for the responses.
+    :param df: raw cleaned responses
+    :param pdf_results_file: path for output pdf
+    :return: None
     """
 
-    for punctuation in string.punctuation:
-        text = text.replace(punctuation, '')
-    return text
+    # reshape free form questions
+    reshaped_df = reshape_data_for_plots(df)
+
+    # find unique questions to plot
+    questions = list(reshaped_df["question"].drop_duplicates())
+
+    with PdfPages(pdf_results_file) as pdf:
+        [plot_function(reshaped_df, i, pdf) for i in questions]
+
+    return None
 
 
 def plot_function(df: pd.DataFrame, question: str, pdf):
@@ -47,16 +54,9 @@ def plot_function(df: pd.DataFrame, question: str, pdf):
             shadow=True,
             startangle=90)
     ax1.axis('equal')
-    n = len(question)
-    font_size = 16 if n < 20 else 13
 
-    if n > 35:
-        middle = math.floor(n / 2)
-        while question[middle] != " " and middle < (n - 1):
-            middle += 1
-
-        if middle < (n - 1):
-            question = question[:middle] + "\n" + question[middle:]
+    # for questions that are super long, change the font and split the text
+    font_size, question = munge_title(question)
 
     fig1.suptitle(question, fontsize=font_size)
     pdf.savefig()
@@ -96,22 +96,36 @@ def reshape_data_for_plots(df: pd.DataFrame) -> pd.DataFrame:
     return agg_combined_df
 
 
-def generate_plots(df: pd.DataFrame, pdf_results_file: str):
-
+def munge_title(question: str):
     """
-    This will generate pie plots for the responses.
-    :param df: raw cleaned responses
-    :param pdf_results_file: path for output pdf
-    :return: None
+    Set font size based on length of question, add newline in long questions to break it up
+
+    :param question: input question for plot
+    :return: font size as int and reformed question string
     """
 
-    # reshape free form questions
-    reshaped_df = reshape_data_for_plots(df)
+    n = len(question)
+    font_size = 16 if n < 20 else 13
 
-    # find unique questions to plot
-    questions = list(reshaped_df["question"].drop_duplicates())
+    if n > 35:
+        middle = math.floor(n / 2)
+        while question[middle] != " " and middle < (n - 1):
+            middle += 1
 
-    with PdfPages(pdf_results_file) as pdf:
-        [plot_function(reshaped_df, i, pdf) for i in questions]
+        if middle < (n - 1):
+            question = question[:middle] + "\n" + question[middle:]
 
-    return None
+    return font_size, question
+
+
+def remove_punctuations(text):
+    """
+    Remove punctutation from free-form answers
+
+    :param text: free form answer
+    :return: cleaned answered
+    """
+
+    for punctuation in string.punctuation:
+        text = text.replace(punctuation, '')
+    return text
