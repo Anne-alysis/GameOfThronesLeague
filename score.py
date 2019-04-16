@@ -17,7 +17,8 @@ import sys
 import pandas as pd
 
 import plot_results as pr
-import score_io as sio
+import score_output_handling as so
+import score_input_handling as si
 import score_methods as sm
 
 create_answer_flag = False
@@ -42,7 +43,7 @@ def main():
 
     # read in responses
     print("Reading in responses ...")
-    response_df: pd.DataFrame = sio.read_data(responses_file)
+    response_df: pd.DataFrame = si.read_data(responses_file)
 
     # produce aggregate statistical plots
     if week == 1:
@@ -50,7 +51,7 @@ def main():
 
     # write answers to csv, for forming correct answer sheet
     if create_answer_flag:
-        sio.create_answer_csv(response_df)
+        si.create_answer_csv(response_df)
 
     # read in correct answer key
     answer_df: pd.DataFrame = pd.read_excel(answer_file)
@@ -59,8 +60,11 @@ def main():
     print("Scoring results ...")
     summed_df: pd.DataFrame = sm.score_results(response_df, answer_df, week)
 
-    print("Writing results ...")
-    sio.combine_weeks_and_write_scores(summed_df, week, results_file)
+    print("Combining previous weeks' results ... (if applicable)")
+    combined_weeks_df = so.combine_weeks(summed_df, week, results_file)
+
+    print("Writing output file")
+    so.write_scores(combined_weeks_df, week, results_file)
 
     print("Done!")
 
