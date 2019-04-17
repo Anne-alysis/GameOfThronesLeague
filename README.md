@@ -3,8 +3,11 @@
 # Introduction
 
 In honor of the final season of Game of Thrones, we put together a fantasy league!  Each participant fills
-out a form we developed before the start of the season. Week by week, possible answers to each question are updated, and the code to algorithmically score the results each week is in this repo.  Example questions
-include:
+out a form we developed before the start of the season. Week by week, possible answers to each question are updated, and 
+are scored by an algorithm. I developed the scoring algorithm that is in this repo. The form itself is accessible by Google 
+forms and is not included here. Questions and current correct answers can be viewed in the file, `./external-files/answer_truth.xlsx`. 
+
+Example questions include:
  
  * Whether a character lives or dies
  * Who rides a dragon
@@ -62,6 +65,5 @@ results by team also happen in this module.
 
 This takes in each question, aggregates the distinct responses, and plots the percentage of each unique response in a pie chart.  All 
 individual visualized questions are then combined into a single pdf.
-
 
 
