@@ -39,8 +39,8 @@ def combine_weeks(df: pd.DataFrame, week: int, results_file: str) -> pd.DataFram
         # combine old results with current results
         combined_results = pd.merge(df, old_results, "left", \
                                     ["Team", "Iron Bank"]).sort_values(f"Episode {week} Rank")
-        combined_results[mvmt_name] = combined_results[f"Episode {week} Rank"] - \
-                                      combined_results[f"Episode {week - 1} Rank"]
+        combined_results[mvmt_name] = combined_results[f"Episode {week - 1} Rank"] - \
+                                        combined_results[f"Episode {week} Rank"]
 
         # change the position of the "movement" column
         col_names = list(combined_results.columns)
