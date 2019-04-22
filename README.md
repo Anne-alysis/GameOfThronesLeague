@@ -1,5 +1,7 @@
 # GameOfThronesLeague
 
+Python version of https://github.com/Anne-alysis/GameOfThronesLeagueSpark.  
+
 # Introduction
 
 In honor of the final season of Game of Thrones, we put together a fantasy league!  Each participant fills
