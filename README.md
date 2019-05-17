@@ -1,6 +1,6 @@
 # GameOfThronesLeague
 
-Python version of https://github.com/Anne-alysis/GameOfThronesLeagueSpark.  The code structure of the Spark version is preferable, and I plan to update the Python version to be more maintainable in line with the Spark structure.  
+Python version of https://github.com/Anne-alysis/GameOfThronesLeagueSpark.  The code structure of the Spark version is preferable, and this branch is a draft of more maintainable code in line with the Spark code structure.  
 
 # Introduction
 
@@ -72,7 +72,7 @@ some questions have multiple possible answers.  These are handled separately.  G
 results by team also happen in this module.  
 
 ## `plotting` package
-### 'score_plotting.py'
+### `score_plotting.py`
 
 This takes in each question, aggregates the distinct responses, and plots the percentage of each unique response in a pie chart.  All 
 individual visualized questions are then combined into a single pdf.
