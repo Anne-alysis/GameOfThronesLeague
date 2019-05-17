@@ -1,6 +1,6 @@
 # GameOfThronesLeague
 
-Python version of https://github.com/Anne-alysis/GameOfThronesLeagueSpark.  The code structure of the Spark version is preferable, and I plan to update the Python version to be more maintainable in line with the Spark structure.  
+Python version of https://github.com/Anne-alysis/GameOfThronesLeagueSpark.  The code structure of the Spark version is preferable. I am in the process of updating the Python repo's structure, but it is still a work in progress.  See `reorg` branch for latest changes.  
 
 # Introduction
 
